@@ -1,42 +1,50 @@
-import java.util.ArrayList;
-import java.util.List;
+/*
+* Name: UniqueWords
+* Authors: Patrick Utz / Jeremy Goldberg / Matt
+* Date: 9/6/2018
+* Description: Tells the user how many unique words are in a given sentence
+*/
+
 import java.util.Scanner;
+import java.util.Arrays;  
+import java.util.List;  
+import java.util.ArrayList;
+
 
 public class UniqueWords {
-	
-    public static int countUniqueWords(String str) {
-		
-        String[] words;
+    
+    public static void main(String[] args) {
         
-        List<String> wordBank = new ArrayList<>();
-		
-        words = str.split("\\s+");
+        String[] originalInputArray;
+        List<String> originalList;
+        List<String> uniqueList;
+        String originalInput;
+        String lowercaseInput;
+        Scanner keyboardInput;
         
-        for (int i = 0; i < words.length; i++) {
-            if (wordBank.size() == 0) {
-                wordBank.add(words[i]);
-            }
-            for (int j = 0; j < wordBank.size(); j++) {
-	    	if (words[i].equals(wordBank.get(j))) {
-			break;
-		}
-			    
-		if (j == wordBank.size() - 1) {
-			wordBank.add(words[i]);
-		}
+        // Read input from user and initialize string array
+        System.out.println("Welcome to Unique Words Finder!");
+        System.out.print("Type in a sentence: ");
+        
+        keyboardInput = new Scanner(System.in);
+        originalInput = keyboardInput.nextLine();
+        keyboardInput.close();
+        lowercaseInput = originalInput.toLowerCase();
+        originalInputArray = lowercaseInput.split("\\s+");
+        
+        // Initialize array lists
+        originalList = Arrays.asList(originalInputArray);
+        uniqueList = new ArrayList<String>();
+        
+        // Check for duplicates
+        for (int i = 0; i < originalList.size(); i++) {
+            if (!(uniqueList.contains(originalList.get(i)))) {
+                uniqueList.add(originalList.get(i));
             }
         }
         
-        return wordBank.size();
+        // Output result
+        System.out.println("There are " + uniqueList.size() + " unique words in that sentence.");
     }
-    
-    public static void main(String [] args) {
-        Scanner keyboard = new Scanner(System.in);
-        System.out.println("Feed me a sentence:");
-        String sentence = keyboard.nextLine();
-        keyboard.close();
-
-        System.out.println("This sentence has " + countUniqueWords(sentence) + "unique words!");
-     }
 
 }
