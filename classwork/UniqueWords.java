@@ -17,13 +17,13 @@ public class UniqueWords {
                 wordBank.add(words[i]);
             }
             for (int j = 0; j < wordBank.size(); j++) {
-	            if (words[i].equals(wordBank.get(j))) {
-			        break;
-			    }
+	    	if (words[i].equals(wordBank.get(j))) {
+			break;
+		}
 			    
-			    if (j == wordBank.size() - 1) {
-			        wordBank.add(words[i]);
-			    }
+		if (j == wordBank.size() - 1) {
+			wordBank.add(words[i]);
+		}
             }
         }
         
