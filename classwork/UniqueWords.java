@@ -5,6 +5,8 @@
 * Description: Tells the user how many unique words are in a given sentence
 */
 
+package words;
+
 import java.util.Scanner;
 import java.util.Arrays;  
 import java.util.List;  
