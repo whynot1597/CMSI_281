@@ -1,0 +1,350 @@
+package forneymonegerie;
+
+import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+public class ForneymonegerieTests {
+    
+    // =================================================
+    // Test Configuration
+    // =================================================
+    
+    // Used as the basic empty menagerie to test; the @Before
+    // method is run before every @Test
+    Forneymonegerie fm;
+    @Before
+    public void init () {
+        fm = new Forneymonegerie();
+    }
+
+    
+    // =================================================
+    // Unit Tests
+    // =================================================
+    
+    @Test
+    public void testSize() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertEquals(2, fm.size());
+        fm.collect("Burnymon");
+        assertEquals(3, fm.size());
+    }
+    
+    @Test
+    public void testSize2() {
+        fm.collect("Zappymon");
+        fm.collect("Zappymon");
+        assertEquals(2, fm.size());
+        fm.collect("Zappymon");
+        assertEquals(3, fm.size());
+    }
+
+    @Test
+    public void testCollect() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        assertTrue(fm.contains("Dampymon"));
+        assertTrue(fm.contains("Burnymon"));
+    }
+    
+    @Test
+    public void testCollect2() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertTrue(fm.contains("Dampymon"));
+        assertFalse(fm.contains("Burnymon"));
+    }
+    
+    @Test
+    public void testTypeSize() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertEquals(1, fm.typeSize());
+        fm.collect("Burnymon");
+        assertEquals(2, fm.typeSize());
+    }
+    
+    @Test
+    public void testTypeSize2() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertEquals(1, fm.typeSize());
+        fm.collect("Dampymon");
+        fm.collect("dampymon");
+        assertEquals(2, fm.typeSize());
+    }
+
+    @Test
+    public void testRelease() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertEquals(2, fm.size());
+        assertEquals(1, fm.typeSize());
+        fm.release("Dampymon");
+        assertEquals(1, fm.size());
+        assertEquals(1, fm.typeSize());
+    }
+    
+    @Test
+    public void testRelease2() {
+        fm.collect("Dampymon");
+        fm.collect("Zappymon");
+        assertEquals(2, fm.size());
+        assertEquals(2, fm.typeSize());
+        fm.release("Dampymon");
+        assertEquals(1, fm.size());
+        assertEquals(1, fm.typeSize());
+    }
+
+    @Test
+    public void testReleaseType() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        assertEquals(3, fm.size());
+        assertEquals(2, fm.typeSize());
+        fm.releaseType("Dampymon");
+        assertEquals(1, fm.size());
+        assertEquals(1, fm.typeSize());
+    }
+    
+    @Test
+    public void testReleaseType2() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertEquals(3, fm.size());
+        assertEquals(1, fm.typeSize());
+        fm.releaseType("Dampymon");
+        assertEquals(0, fm.size());
+        assertEquals(0, fm.typeSize());
+    }
+
+    @Test
+    public void testCountType() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        assertEquals(2, fm.countType("Dampymon"));
+        assertEquals(1, fm.countType("Burnymon"));
+        assertEquals(0, fm.countType("forneymon"));
+    }
+
+    @Test
+    public void testContains() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        assertTrue(fm.contains("Dampymon"));
+        assertTrue(fm.contains("Burnymon"));
+        assertFalse(fm.contains("forneymon"));
+    }
+    
+    @Test
+    public void testContains2() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        assertTrue(fm.contains("Dampymon"));
+        assertFalse(fm.contains("dampymon"));
+    }
+
+    @Test
+    public void testNth() {
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        fm.collect("Zappymon");
+        fm.collect("Dampymon");
+        assertEquals("Dampymon", fm.nth(0));
+        assertEquals("Dampymon", fm.nth(1));
+        assertEquals("Burnymon", fm.nth(2));
+        assertEquals("Zappymon", fm.nth(3));
+    }
+    
+    @Test
+    public void testNth2() {
+        fm.collect("Zappy");
+        fm.collect("Zappappy");
+        fm.collect("Zappymon");
+        fm.collect("Zap");
+        assertEquals("Zappy", fm.nth(0));
+        assertEquals("Zappappy", fm.nth(1));
+        assertEquals("Zappymon", fm.nth(2));
+        assertEquals("Zap", fm.nth(3));
+    }
+
+    @Test
+    public void testRarestType() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Zappymon");
+        assertEquals("Zappymon", fm.rarestType());
+        fm.collect("Zappymon");
+        assertEquals("Zappymon", fm.rarestType());
+    }
+    
+    @Test
+    public void testRarestType2() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Zappymon");
+        fm.collect("Burnymon");
+        assertEquals("Burnymon", fm.rarestType());
+        fm.collect("Burnymon");
+        assertEquals("Zappymon", fm.rarestType());
+    }
+
+    @Test
+    public void testClone() {
+        fm.collect("Dampymon");
+        fm.collect("Dampymon");
+        fm.collect("Burnymon");
+        Forneymonegerie dolly = fm.clone();
+        assertEquals(dolly.countType("Dampymon"), 2);
+        assertEquals(dolly.countType("Burnymon"), 1);
+        dolly.collect("Zappymon");
+        assertTrue(fm.size() != dolly.size());
+        assertFalse(fm.contains("Zappymon"));
+        fm.release("Burnymon");
+        assertTrue(dolly.contains("Burnymon"));
+    }
+    
+    @Test
+    public void testClone2() {
+        fm.collect("Dampymo");
+        fm.collect("Dampym");
+        fm.collect("Dampy");
+        fm.collect("Damp");
+        fm.collect("Dam");
+        fm.collect("Da");
+        fm.collect("D");
+        fm.collect("Dampymonn");
+        fm.collect("Dampymonnn");
+        fm.collect("Burnymonnnn");
+        fm.collect("Burnymonnnnn");
+        fm.collect("Burnymonnnnnn");
+        fm.collect("Burnymonnnnnnn");
+        fm.collect("Burnymonnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnnnnnn");
+        fm.collect("Burnymonnnnnnnnnnnnnnnn");
+        
+        assertEquals(fm.size(), 20);
+        Forneymonegerie dolly = fm.clone();
+        assertEquals(dolly.size(), 20);
+        
+    }
+
+    @Test
+    public void testTrade() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Burnymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Zappymon");
+        fm2.collect("Leafymon");
+        fm1.trade(fm2);
+        assertTrue(fm1.contains("Zappymon"));
+        assertTrue(fm1.contains("Leafymon"));
+        assertTrue(fm2.contains("Dampymon"));
+        assertTrue(fm2.contains("Burnymon"));
+        assertFalse(fm1.contains("Dampymon"));
+    }
+    
+    @Test
+    public void testTrade2() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Zappymon");
+        fm2.collect("Leafymon");
+        fm1.trade(fm2);
+        assertTrue(fm1.contains("Zappymon"));
+        assertTrue(fm1.contains("Leafymon"));
+        assertTrue(fm2.contains("Dampymon"));
+        assertFalse(fm2.contains("Burnymon"));
+        assertFalse(fm1.contains("Dampymon"));
+    }
+
+    @Test
+    public void testDiffMon() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Burnymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Dampymon");
+        fm2.collect("Zappymon");
+        Forneymonegerie fm3 = Forneymonegerie.diffMon(fm1, fm2);
+        assertEquals(fm3.countType("Dampymon"), 1);
+        assertEquals(fm3.countType("Burnymon"), 1);
+        assertFalse(fm3.contains("Zappymon"));
+        fm3.collect("Leafymon");
+        assertFalse(fm1.contains("Leafymon"));
+        assertFalse(fm2.contains("Leafymon"));
+    }
+    
+    @Test
+    public void testDiffMon2() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Dampymon");
+        fm2.collect("Zappymon");
+        Forneymonegerie fm3 = Forneymonegerie.diffMon(fm1, fm2);
+        assertEquals(fm3.countType("Dampymon"), 2);
+        assertEquals(fm3.countType("Burnymon"), 0);
+        assertFalse(fm3.contains("Zappymon"));
+        fm3.collect("Leafymon");
+        assertFalse(fm1.contains("Leafymon"));
+        assertFalse(fm2.contains("Leafymon"));
+    }
+
+    @Test
+    public void testSameForneymonegerie() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Burnymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Burnymon");
+        fm2.collect("Dampymon");
+        fm2.collect("Dampymon");
+        assertTrue(Forneymonegerie.sameCollection(fm1, fm2));
+        assertTrue(Forneymonegerie.sameCollection(fm2, fm1));
+        fm2.collect("Leafymon");
+        assertFalse(Forneymonegerie.sameCollection(fm1, fm2));
+    }
+    
+    @Test
+    public void testSameForneymonegerie2() {
+        Forneymonegerie fm1 = new Forneymonegerie();
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        fm1.collect("Dampymon");
+        Forneymonegerie fm2 = new Forneymonegerie();
+        fm2.collect("Burnymon");
+        fm2.collect("Dampymon");
+        fm2.collect("Dampymon");
+        assertFalse(Forneymonegerie.sameCollection(fm1, fm2));
+        assertFalse(Forneymonegerie.sameCollection(fm2, fm1));
+        fm2.release("Burnymon");
+        fm2.collect("Dampymon");
+        assertTrue(Forneymonegerie.sameCollection(fm1, fm2));
+        assertTrue(Forneymonegerie.sameCollection(fm2, fm1));
+    }
+
+}
