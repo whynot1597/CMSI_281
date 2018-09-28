@@ -1,3 +1,16 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * File name  :  ForneymonegerieTests.java
+ * Purpose    :  A Forneymonegerie is a collection of Strings in which duplicates indicate possession of 
+ *               multiple Forneymon of the same type, but the only ordering that must be recorded is the 
+ *               order in which a ForneymonType is collected. A Forneymonegerie thus maps types (Strings) 
+ *               to the number (ints) of individual Forneymon belonging to each type.
+ * @author    :  Andrew Forney (prototype)
+ * @author    :  Jeremy Goldberg
+ * Date       :  2018-09-28
+ * Description:  @see <a href='http://forns.lmu.build/classes/fall-2018/cmsi-281/homework/hw1/homework-1.html'>Assignment Page</a>
+ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
 package forneymonegerie;
 
 public class Forneymonegerie implements ForneymonegerieInterface {
@@ -31,7 +44,8 @@ public class Forneymonegerie implements ForneymonegerieInterface {
         return typeSize;
     }
     
-    public boolean collect (String toAdd) { 
+    public boolean collect (String toAdd) {
+        //Case: this already has a type of toAdd
         if (!this.contains(toAdd)) {
             checkAndGrow();
             collection[typeSize] = new ForneymonType(toAdd, 1);
@@ -40,6 +54,7 @@ public class Forneymonegerie implements ForneymonegerieInterface {
             return true;
         }
         
+        //Case: this does not have a type toAdd
         for (int i = 0; i < typeSize; i++) {
             if (collection[i].type.equals(toAdd)) {
                 collection[i].count++;
@@ -50,7 +65,8 @@ public class Forneymonegerie implements ForneymonegerieInterface {
         return true;
     }
     
-    public boolean release (String toRemove) {          
+    public boolean release (String toRemove) {
+        //Finds a ForneymonType toRemove and subtracts from its count
         for (int i = 0; i < typeSize; i++) {
             if (collection[i].type.equals(toRemove)) {
                 collection[i].count--;
@@ -67,6 +83,7 @@ public class Forneymonegerie implements ForneymonegerieInterface {
     }
     
     public void releaseType (String toNuke) {
+        //Finds a ForneymonType toNuke and removes from collection
         if (this.contains(toNuke)) {
             for (int i = 0; i < typeSize; i++) {
                 if (collection[i].type.equals(toNuke)) {
@@ -98,6 +115,7 @@ public class Forneymonegerie implements ForneymonegerieInterface {
     }
     
     public String nth (int n) {
+        //Case: user inputs a number outside array bounds
         if (n >= size || n < 0) {
             throw new IllegalArgumentException();
         }
