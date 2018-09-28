@@ -1,0 +1,223 @@
+package forneymonegerie;
+
+public class Forneymonegerie implements ForneymonegerieInterface {
+
+    // Fields
+    // ----------------------------------------------------------
+    private ForneymonType[] collection;
+    private int size;
+    private int typeSize;
+    private static final int START_SIZE = 16;
+    
+    
+    // Constructor
+    // ----------------------------------------------------------
+    Forneymonegerie () {
+        this.reset();
+    }
+    
+    
+    // Methods
+    // ----------------------------------------------------------
+    public boolean empty () {
+       return size == 0;
+    }
+    
+    public int size () {
+        return size;
+    }
+    
+    public int typeSize () {
+        return typeSize;
+    }
+    
+    public boolean collect (String toAdd) { 
+        if (!this.contains(toAdd)) {
+            checkAndGrow();
+            collection[typeSize] = new ForneymonType(toAdd, 1);
+            typeSize++;
+            size++;
+            return true;
+        }
+        
+        for (int i = 0; i < typeSize; i++) {
+            if (collection[i].type.equals(toAdd)) {
+                collection[i].count++;
+                size++;
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public boolean release (String toRemove) {          
+        for (int i = 0; i < typeSize; i++) {
+            if (collection[i].type.equals(toRemove)) {
+                collection[i].count--;
+                size--;
+                if (collection[i].count == 0) {
+                    shiftLeftAt(i);
+                    typeSize--;
+                }
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public void releaseType (String toNuke) {
+        if (this.contains(toNuke)) {
+            for (int i = 0; i < typeSize; i++) {
+                if (collection[i].type.equals(toNuke)) {
+                    size -= collection[i].count;
+                    typeSize--;
+                    shiftLeftAt(i);
+                    return;
+                }
+            }
+        }
+    }
+    
+    public int countType (String toCount) {
+        for (int i = 0; i < typeSize; i++) {
+            if (collection[i].type.equals(toCount)) {
+                return collection[i].count;
+            }
+        }
+        return 0;
+    }
+    
+    public boolean contains (String toCheck) {
+        for (int i = 0; i < typeSize; i++) {
+            if (collection[i].type.equals(toCheck)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public String nth (int n) {
+        if (n >= size || n < 0) {
+            throw new IllegalArgumentException();
+        }
+        
+        for (int i = 0; i <= typeSize; i++) {
+            if (n < 0) {
+                return collection[i - 1].type;
+            } else if (n == 0) {
+                return collection[i].type;
+            }
+            n -= collection[i].count;
+        }
+        
+        throw new IllegalArgumentException();
+    }
+    
+    public String rarestType () {
+        int rarestTypeIndex = 0;
+        for (int i = 1; i < typeSize; i++) {
+            if (collection[i].count <= collection[rarestTypeIndex].count) {
+                rarestTypeIndex = i;
+            }
+        }
+        return collection[rarestTypeIndex].type;
+    }
+    
+    public Forneymonegerie clone () {
+        Forneymonegerie newFm = new Forneymonegerie();
+        
+        collectAll(this, newFm);
+        
+        return newFm;
+    }
+    
+    public void trade (Forneymonegerie other) {
+        Forneymonegerie tempFm = this.clone();
+        
+        this.reset();
+        collectAll(other, this);
+        
+        other.reset();
+        collectAll(tempFm, other);
+    }
+    
+    
+    // Static methods
+    // ----------------------------------------------------------
+    public static Forneymonegerie diffMon (Forneymonegerie y1, Forneymonegerie y2) {
+        Forneymonegerie tempFm = y1.clone();
+        
+        for (int i = 0; i < y2.typeSize; i++) {
+            if (tempFm.contains(y2.collection[i].type)) {
+                int amount = y2.collection[i].count;
+                for (int j = 0; j < amount; j++) {
+                    tempFm.release(y2.collection[i].type);
+                }
+            }
+        }
+        
+        return tempFm;
+    }
+    
+    public static boolean sameCollection (Forneymonegerie y1, Forneymonegerie y2) {
+        return diffMon(y1, y2).size == 0 && 
+               diffMon(y2, y1).size == 0;
+    }
+    
+    private static void collectAll(Forneymonegerie source, Forneymonegerie target) {
+        for (int i = 0; i < source.size; i++) {
+            target.collect(source.nth(i));
+        }
+    }
+    
+    
+    // Private helper methods
+    // ----------------------------------------------------------
+    
+    private void checkAndGrow () {
+        // Case: big enough to fit another item, so no
+        // need to grow
+        if (size < collection.length) {
+            return;
+        }
+        
+        // Case: we're at capacity and need to grow
+        // Step 1: create new, bigger array; we'll
+        // double the size of the old one
+        ForneymonType[] newCollection = new ForneymonType[collection.length * 2];
+        
+        // Step 2: copy the items from the old array
+        for (int i = 0; i < collection.length; i++) {
+            newCollection[i] = collection[i];
+        }
+        
+        // Step 3: update IntList reference
+        collection = newCollection;
+    }
+    
+    private void shiftLeftAt (int index) {
+        for (int i = index; i < size - 1; i++) {
+            collection[i] = collection[i + 1];
+        }
+    }
+    
+    private void reset() {
+        size = 0;
+        typeSize = 0;
+        collection = new ForneymonType[START_SIZE];
+    }
+    
+    // Private Classes
+    // ----------------------------------------------------------
+    private class ForneymonType {
+        String type;
+        int count;
+        
+        ForneymonType (String t, int c) {
+            type = t;
+            count = c;
+        }
+    }
+    
+}
