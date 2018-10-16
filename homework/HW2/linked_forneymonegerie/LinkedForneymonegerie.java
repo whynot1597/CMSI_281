@@ -13,26 +13,48 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     // Constructor
     // -----------------------------------------------------------
     LinkedForneymonegerie () {
-        // TODO
+        head = null;
+        size = 0;
+        typeSize = 0;
+        modCount = 0;
     }
     
     
     // Methods
     // -----------------------------------------------------------
     public boolean empty () {
-        throw new UnsupportedOperationException();
+        return size == 0;
     }
     
     public int size () {
-        throw new UnsupportedOperationException();
+        return size;
     }
     
     public int typeSize () {
-        throw new UnsupportedOperationException();
+        return typeSize;
     }
     
     public boolean collect (String toAdd) {
-        throw new UnsupportedOperationException();
+        if (size == 0) {
+        	head = new ForneymonType(toAdd, 1);
+        	head.next = null;
+        	head.prev = null;
+        }
+        
+        ForneymonType current = head;        
+        for (int i = size; i > 0; i--) {
+        	if (current.type.equals(toAdd)) {
+        		current.count++;
+        		modCount++;
+        		return false;
+        	}
+        	current = current.next;
+        }
+        
+        current.next = new ForneymonType(toAdd, 1);
+        modCount++;
+        return true;
+        
     }
     
     public boolean release (String toRemove) {
