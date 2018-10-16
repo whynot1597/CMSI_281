@@ -37,52 +37,138 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     public boolean collect (String toAdd) {
         if (size == 0) {
         	head = new ForneymonType(toAdd, 1);
+        	size++;
+        	typeSize++;
+        	modCount++;
         	head.next = null;
         	head.prev = null;
+        	return true;
         }
         
         ForneymonType current = head;        
-        for (int i = size; i > 0; i--) {
+        for (int i = 0; i < typeSize; i++) {
         	if (current.type.equals(toAdd)) {
         		current.count++;
+        		size++;
         		modCount++;
         		return false;
+        	}
+        	
+        	if (!(current.next != null)) {
+        		current.next = new ForneymonType(toAdd, 1);
+        		current.next.prev = current;
+        		current.next.next = null;
+        		size++;
+                typeSize++;
+                modCount++;
+                return true;
         	}
         	current = current.next;
         }
         
-        current.next = new ForneymonType(toAdd, 1);
-        modCount++;
-        return true;
-        
+        return false;
     }
     
     public boolean release (String toRemove) {
-        throw new UnsupportedOperationException();
+        ForneymonType current = head;        
+        for (int i = 0; i < typeSize; i++) {
+        	if (current.type.equals(toRemove)) {
+        		size--;
+        		modCount++;
+        		if (current.count == 0) {
+        			if (current == head) {
+        				typeSize--;
+            			head = current.next;
+            			return true;
+            		}
+        			current.prev.next = current.next;
+        			typeSize--;
+        			return true;
+        		}
+        		return true;
+        	}
+        	current = current.next;
+        }
+        return false;
     }
     
     public void releaseType (String toNuke) {
-        throw new UnsupportedOperationException();
+        ForneymonType current = head;
+        for (int i = 0; i < typeSize; i++) {
+        	if (current.type.equals(toNuke)) {
+        		size -= current.count;
+        		modCount++;
+        		typeSize--;
+        		if (current == head) {
+        			head = current.next;
+        			return;
+        		}
+        		current.prev.next = current.next;
+        		return;
+        	}
+        	current = current.next;
+        }
     }
     
     public int countType (String toCount) {
-        throw new UnsupportedOperationException();
+        ForneymonType current = head;
+        for (int i = 0; i < typeSize; i++) {
+        	if (current.type.equals(toCount)) {
+        		return current.count;
+        	}
+        	current = current.next;
+        }
+        
+        return 0;
     }
     
     public boolean contains (String toCheck) {
-        throw new UnsupportedOperationException();
+        ForneymonType current = head;
+        for (int i = 0; i < typeSize; i++) {
+        	if (current.type.equals(toCheck)) {
+        		return true;
+        	}
+        	current = current.next;
+        }
+        return false;
     }
     
     public String rarestType () {
-        throw new UnsupportedOperationException();
+    	if (size == 0) {
+    		return null;
+    	}
+    	ForneymonType current = head;
+    	ForneymonType rarest = current;
+    	
+    	for (int i = 0; i < typeSize; i++) {
+    		if (current.count <= rarest.count) {
+    			rarest = current;
+    		}
+    		current = current.next;
+    	}
+    	
+    	return rarest.type;
     }
     
     public LinkedForneymonegerie clone () {
-        throw new UnsupportedOperationException();
+    	ForneymonType current = head;
+        LinkedForneymonegerie clone = new LinkedForneymonegerie();
+        clone.head = head;
+        
+        for (int i = 0; i < typeSize; i++) {
+        	for (int j = 0; j < current.count; j++) {
+        		clone.collect(current.type);
+        	}
+        	current = current.next;
+        }
+        
+        return clone;
     }
     
     public void trade (LinkedForneymonegerie other) {
-        throw new UnsupportedOperationException();
+        ForneymonType tempHead = head;
+        head = other.head;
+        other.head = tempHead;
     }
     
     public LinkedForneymonegerie.Iterator getIterator () {
