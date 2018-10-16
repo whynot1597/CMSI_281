@@ -73,6 +73,7 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         ForneymonType current = head;        
         for (int i = 0; i < typeSize; i++) {
         	if (current.type.equals(toRemove)) {
+        		current.count--;
         		size--;
         		modCount++;
         		if (current.count == 0) {
@@ -167,12 +168,22 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     
     public void trade (LinkedForneymonegerie other) {
         ForneymonType tempHead = head;
+        int tempSize = size;
+        int tempTypeSize = typeSize;
+        
         head = other.head;
+        size = other.size;
+        typeSize = other.typeSize();
+        modCount++;
+        
         other.head = tempHead;
+        other.size = tempSize;
+        other.typeSize = tempTypeSize;      
+        other.modCount++;
     }
     
     public LinkedForneymonegerie.Iterator getIterator () {
-        throw new UnsupportedOperationException();
+        return new LinkedForneymonegerie.Iterator(this);
     }
     
     
@@ -203,31 +214,33 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         int itModCount;
         
         Iterator (LinkedForneymonegerie y) {
-            // TODO
+            itModCount = y.modCount;
+            current = y.head;
+            owner = y;
         }
         
         public boolean hasNext () {
-            throw new UnsupportedOperationException();
+            return current.next != null;
         }
         
         public boolean hasPrev () {
-            throw new UnsupportedOperationException();
+            return current.prev != null;
         }
         
         public boolean isValid () {
-            throw new UnsupportedOperationException();
+        	return itModCount == owner.modCount;
         }
         
         public String getType () {
-            throw new UnsupportedOperationException();
+            return current.type;
         }
 
         public void next () {
-            throw new UnsupportedOperationException();
+            current = current.next;
         }
         
         public void prev () {
-            throw new UnsupportedOperationException();
+            current = current.prev;
         }
         
         public void replaceAll (String toReplaceWith) {
