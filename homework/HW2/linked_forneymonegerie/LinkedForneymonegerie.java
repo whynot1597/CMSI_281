@@ -173,6 +173,16 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         return new LinkedForneymonegerie.Iterator(this);
     }
     
+    @Override
+    public String toString() {
+    	String result = "[ ";
+    	ForneymonType current = head;
+    	for (int i = 0; i < typeSize - 1; i++) {
+    		result = result + "\"" + current.type + "\"" + ": " + current.count + ", ";
+    		current = current.next;
+    	}
+    	return result + "\"" + current.type + "\"" + ": " + current.count + " ]";
+    }
     
     // -----------------------------------------------------------
     // Static methods
