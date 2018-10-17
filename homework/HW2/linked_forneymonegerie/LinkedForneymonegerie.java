@@ -152,34 +152,21 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     }
     
     public LinkedForneymonegerie clone () {
-    	ForneymonType current = head;
-        LinkedForneymonegerie clone = new LinkedForneymonegerie();
-        clone.head = head;
+    	LinkedForneymonegerie newFm = new LinkedForneymonegerie();
         
-        for (int i = 0; i < typeSize; i++) {
-        	for (int j = 0; j < current.count; j++) {
-        		clone.collect(current.type);
-        	}
-        	current = current.next;
-        }
+        collectAll(this, newFm);
         
-        return clone;
+        return newFm;
     }
     
     public void trade (LinkedForneymonegerie other) {
-        ForneymonType tempHead = head;
-        int tempSize = size;
-        int tempTypeSize = typeSize;
+    	LinkedForneymonegerie tempFm = this.clone();
         
-        head = other.head;
-        size = other.size;
-        typeSize = other.typeSize();
-        modCount++;
+        this.reset();
+        collectAll(other, this);
         
-        other.head = tempHead;
-        other.size = tempSize;
-        other.typeSize = tempTypeSize;      
-        other.modCount++;
+        other.reset();
+        collectAll(tempFm, other);
     }
     
     public LinkedForneymonegerie.Iterator getIterator () {
@@ -192,17 +179,45 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     // -----------------------------------------------------------
     
     public static LinkedForneymonegerie diffMon (LinkedForneymonegerie y1, LinkedForneymonegerie y2) {
-        throw new UnsupportedOperationException();
+    	LinkedForneymonegerie tempFm = y1.clone();
+    	ForneymonType current = y2.head;
+        
+        for (int i = 0; i < y2.typeSize; i++) {
+            if (tempFm.contains(current.type)) {
+                int amount = current.count;
+                for (int j = 0; j < amount; j++) {
+                    tempFm.release(current.type);
+                }
+            }
+            current = current.next;
+        }
+        
+        return tempFm;
     }
     
     public static boolean sameCollection (LinkedForneymonegerie y1, LinkedForneymonegerie y2) {
-        throw new UnsupportedOperationException();
+        return (diffMon(y1, y2).size == 0) && (diffMon(y2, y1).size == 0);
+    }
+    
+    private static void collectAll(LinkedForneymonegerie source, LinkedForneymonegerie target) {
+    	ForneymonType current = source.head;
+    	for (int i = 0; i < source.typeSize; i++) {
+        	for (int j = 0; j < current.count; j++) {
+        		target.collect(current.type);
+        	}
+        	current = current.next;
+        }
     }
     
     // Private helper methods
     // -----------------------------------------------------------
 
-    // TODO: Your helper methods here!
+    private void reset() {
+        size = 0;
+        typeSize = 0;
+        head = null;
+        modCount = 0;
+    }
     
     
     // Inner Classes
@@ -211,20 +226,22 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
     public class Iterator implements LinkedForneymonegerieIteratorInterface {
         LinkedForneymonegerie owner;
         ForneymonType current;
+        int currentIndex;
         int itModCount;
         
         Iterator (LinkedForneymonegerie y) {
             itModCount = y.modCount;
             current = y.head;
             owner = y;
+            currentIndex = 0;
         }
         
         public boolean hasNext () {
-            return current.next != null;
+            return current.next != null || (currentIndex < current.count - 1);
         }
         
         public boolean hasPrev () {
-            return current.prev != null;
+            return current.prev != null || (currentIndex > 0);
         }
         
         public boolean isValid () {
@@ -236,15 +253,44 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         }
 
         public void next () {
+        	if (!isValid()) {
+        		throw new IllegalStateException();
+        	}
+        	if (!hasNext()) {
+        		throw new NoSuchElementException();
+        	}
+        	if (currentIndex < current.count - 1) {
+        		currentIndex++;
+        		return;
+        	}
+        	currentIndex = 0;
             current = current.next;
         }
         
         public void prev () {
-            current = current.prev;
+        	if (!isValid()) {
+        		throw new IllegalStateException();
+        	}
+        	if (!hasPrev()) {
+        		throw new NoSuchElementException();
+        	}
+        	if (currentIndex > 0) {
+        		currentIndex--;
+        		return;
+        	}
+        	current = current.prev;
+        	if (current != null) {
+        		currentIndex = current.count - 1;
+        	}
         }
         
         public void replaceAll (String toReplaceWith) {
-            throw new UnsupportedOperationException();
+        	if (!isValid()) {
+        		throw new IllegalStateException();
+        	}
+        	current.type = toReplaceWith;
+        	itModCount++;
+        	owner.modCount++;
         }
         
     }
