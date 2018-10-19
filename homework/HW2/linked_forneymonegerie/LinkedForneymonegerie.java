@@ -79,7 +79,12 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         		if (current.count == 0) {
         			if (current == head) {
         				typeSize--;
+        				if (typeSize == 0) {
+        					head = null;
+        					return true;
+        				}
             			head = current.next;
+            			head.prev = null;
             			return true;
             		}
         			current.prev.next = current.next;
@@ -102,6 +107,10 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         		typeSize--;
         		if (current == head) {
         			head = current.next;
+        			if (!(head != null)) {
+        				return;
+        			}
+        			head.prev = null;
         			return;
         		}
         		current.prev.next = current.next;
@@ -298,9 +307,39 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         	if (!isValid()) {
         		throw new IllegalStateException();
         	}
-        	current.type = toReplaceWith;
+        	if (current.type.equals(toReplaceWith)) {
+        		return;
+        	}
+        	if (!(current != null)) {
+        		return;
+        	}
+        	
+        	int amount = current.count;
+        	if (owner.contains(toReplaceWith)) {
+        		for (int i = 0; i < amount; i++) {
+        			owner.collect(toReplaceWith);
+        			itModCount++;
+        		}
+        		owner.release(current.type);
+        		itModCount++;
+        		current = head;
+        		while (!toReplaceWith.equals(current.type)) {
+        			current = current.next;
+        		}
+        		return;
+        	}
+        	
+        	for(int i = 0; i < amount; i++) {
+        		owner.collect(toReplaceWith);
+        		itModCount++;
+        	}
+        	owner.releaseType(current.type);
         	itModCount++;
-        	owner.modCount++;
+        	current = head;
+        	for (int i = 0; i < typeSize; i++) {
+        		current = current.next;
+        	}
+        	return;
         }
         
     }
