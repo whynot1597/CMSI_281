@@ -256,11 +256,11 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         }
         
         public boolean hasNext () {
-            return current.next != null || (currentIndex < current.count - 1);
+            return (current.next != null) || (currentIndex < current.count - 1);
         }
         
         public boolean hasPrev () {
-            return current.prev != null || (currentIndex > 0);
+            return (current.prev != null) || (currentIndex > 0);
         }
         
         public boolean isValid () {
@@ -336,7 +336,7 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         	owner.releaseType(current.type);
         	itModCount++;
         	current = head;
-        	for (int i = 0; i < typeSize; i++) {
+        	for (int i = 0; i < owner.typeSize - 1; i++) {
         		current = current.next;
         	}
         	return;
