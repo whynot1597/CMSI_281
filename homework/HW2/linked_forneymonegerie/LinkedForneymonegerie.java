@@ -54,7 +54,7 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         		return false;
         	}
         	
-        	if (!(current.next != null)) {
+        	if (current.next == null) {
         		current.next = new ForneymonType(toAdd, 1);
         		current.next.prev = current;
         		current.next.next = null;
@@ -107,7 +107,7 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         		typeSize--;
         		if (current == head) {
         			head = current.next;
-        			if (!(head != null)) {
+        			if (head == null) {
         				return;
         			}
         			head.prev = null;
@@ -307,21 +307,18 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         	if (!isValid()) {
         		throw new IllegalStateException();
         	}
-        	if (current.type.equals(toReplaceWith)) {
+        	if (current == null) {
         		return;
         	}
-        	if (!(current != null)) {
+        	if (current.type.equals(toReplaceWith)) {
         		return;
         	}
         	
         	int amount = current.count;
         	if (owner.contains(toReplaceWith)) {
-        		for (int i = 0; i < amount; i++) {
-        			owner.collect(toReplaceWith);
-        			itModCount++;
-        		}
-        		owner.release(current.type);
-        		itModCount++;
+        		
+        		addAndReplace(toReplaceWith, amount);
+        		
         		current = head;
         		while (!toReplaceWith.equals(current.type)) {
         			current = current.next;
@@ -329,17 +326,21 @@ public class LinkedForneymonegerie implements LinkedForneymonegerieInterface {
         		return;
         	}
         	
-        	for(int i = 0; i < amount; i++) {
-        		owner.collect(toReplaceWith);
-        		itModCount++;
-        	}
-        	owner.releaseType(current.type);
-        	itModCount++;
+        	addAndReplace(toReplaceWith, amount);
+        	
         	current = head;
         	for (int i = 0; i < owner.typeSize - 1; i++) {
         		current = current.next;
         	}
-        	return;
+        }
+        
+        private void addAndReplace(String toReplaceWith, int amount) {
+        	for (int i = 0; i < amount; i++) {
+    			owner.collect(toReplaceWith);
+    			itModCount++;
+    		}
+    		owner.releaseType(current.type);
+    		itModCount++;
         }
         
     }
