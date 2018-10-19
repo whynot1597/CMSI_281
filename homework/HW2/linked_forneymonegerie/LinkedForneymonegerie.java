@@ -1,3 +1,15 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * File name  :  LinkedForneymonegerie.java
+ * Purpose    :  A Forneymonegerie is a collection of Strings in which duplicates indicate possession of 
+ *               multiple Forneymon of the same type, but the only ordering that must be recorded is the 
+ *               order in which a ForneymonType is collected. A Forneymonegerie thus maps types (Strings) 
+ *               to the number (ints) of individual Forneymon belonging to each type.
+ * @author    :  Andrew Forney (prototype)
+ * @author    :  Jeremy Goldberg
+ * Date       :  2018-10-19
+ * Description:  @see <a href='http://forns.lmu.build/classes/fall-2018/cmsi-281/homework/hw1/homework-2.html'>Assignment Page</a>
+ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 package linked_forneymonegerie;
 
 import java.util.NoSuchElementException;
