@@ -173,12 +173,12 @@ public class Dictreenary implements DictreenaryInterface {
     		return result;
     	}
 
+    	result.addAll(getWordsFrom(current.left, currentWord));
     	if (current.wordEnd) {
     		result.add(currentWord + current.letter);
     	}
-    	result.addAll(getWordsFrom(current.left, currentWord));
     	result.addAll(getWordsFrom(current.mid, currentWord + current.letter));
-    	result.addAll(getWordsFrom(current.right, currentWord));
+    	result.addAll(getWordsFrom(current.right, currentWord));   
     	
     	return result;
     }
