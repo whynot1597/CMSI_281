@@ -1,3 +1,14 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * File name  :  Dictreenary.java
+ * Purpose    :  Provides framework for creating a tree with words that can be added, checked, spell checked
+ * 				 or get a sorted list of all the words
+ * @author    :  Andrew Forney (prototype)
+ * @author    :  Jeremy Goldberg
+ * Date       :  2018-11-29
+ * Description:  @see <a href='http://forns.lmu.build/classes/fall-2018/cmsi-281/homework/hw4/homework-4.html'>Assignment Page</a>
+ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+
 package dictreenary;
 
 import java.util.ArrayList;
@@ -22,12 +33,14 @@ public class Dictreenary implements DictreenaryInterface {
     }
     
     public void addWord (String toAdd) {
+    	//Edge Case: user inputs nothing
     	if (toAdd == null) {
     		return;
     	}
     	toAdd = normalizeWord(toAdd);
     	char[] toAddArray = toAdd.toCharArray();
         
+    	// Edge Case: there is nothing in the Dictreenary
         if (isEmpty()) {
         	root = new TTNode(toAddArray[0], false);
         	addRemainingChars(toAddArray, 1, root);
@@ -37,11 +50,13 @@ public class Dictreenary implements DictreenaryInterface {
         TTNode current = root;
         
         for (int i = 0; i < toAddArray.length; i++) {
-        	current = findNextLetter(toAddArray[i], current, true);
+        	current = findNextLetter(toAddArray[i], current, true);  //Adds next letter in correct spot and returns that spot
+        	//If there is nothing below it we can add the rest of the word
         	if (current.mid == null) {
         		addRemainingChars(toAddArray, i + 1, current);
         		return;
         	}
+        	//If the letter we added is the last one
         	if (i + 1 == toAddArray.length) {
         		current.wordEnd = true;
         		return;
@@ -53,6 +68,7 @@ public class Dictreenary implements DictreenaryInterface {
     }
     
     public boolean hasWord (String query) {
+    	//Edge Case: user does not input anything or there is nothing in the dictreenary
     	if (query == null || isEmpty()) {
     		return false;
     	}
@@ -63,7 +79,7 @@ public class Dictreenary implements DictreenaryInterface {
         TTNode current = root;
         TTNode previous = null;
         for (int i = 0; i < queryArray.length; i++) {
-        	current = findNextLetter(queryArray[i], current, false);
+        	current = findNextLetter(queryArray[i], current, false); //Returns the space where the letter is or null
         	if (current == null) {
         		return false;
         	}
@@ -125,6 +141,8 @@ public class Dictreenary implements DictreenaryInterface {
         return Character.toLowerCase(c1) - Character.toLowerCase(c2);
     }
     
+    
+    //Adds remaining chars of given char[] to dictreenary
     private void addRemainingChars(char[] wordArray, int startIndex, TTNode currentNode) {
     	
     	for (int i = startIndex; i < wordArray.length; i++) {
@@ -134,15 +152,18 @@ public class Dictreenary implements DictreenaryInterface {
     	currentNode.wordEnd = true;
     }
     
+    //Returns the location of c, adds if need too and add == true
     private TTNode findNextLetter (char c, TTNode currentNode, boolean add) { 
     	if (currentNode == null) {
     		return null;
     	}
     	int compare = compareChars(c, currentNode.letter);
     	
+    	//case: this is the correct node
     	if (compare == 0) {
     		return currentNode;
     	}
+    	//case: the correct node is to the left
     	if (compare < 0) {
     		if (currentNode.left == null && add) {
     			currentNode.left = new TTNode(c, false);
@@ -150,6 +171,7 @@ public class Dictreenary implements DictreenaryInterface {
     		}
     		return findNextLetter(c, currentNode.left, add);
     	}
+    	//case: the correct node is to the right
     	if (compare > 0) {
     		if (currentNode.right == null && add) {
     			currentNode.right = new TTNode(c, false);
@@ -181,10 +203,7 @@ public class Dictreenary implements DictreenaryInterface {
     	result.addAll(getWordsFrom(current.right, currentWord));   
     	
     	return result;
-    }
-    
-    // [!] Add your own helper methods here!
-    
+    }    
     
     // TTNode Internal Storage
     // -----------------------------------------------------------
