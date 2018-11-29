@@ -47,6 +47,12 @@ public class DictreenaryTests {
         dt.addWord("at");
         dt.addWord("bat");
     }
+    
+    @Test
+    public void testAddWordNull() {
+    	dt.addWord(null);
+    	dt.addWord("");
+    }
 
     @Test
     public void testHasWord() {
@@ -132,4 +138,49 @@ public class DictreenaryTests {
         assertEquals(solution, dt.getSortedWords());
     }
     
+    @Test
+    public void sampleTests() {
+    	String testString = "In up so discovery my middleton eagerness "
+        		+ "dejection explained Estimating excellence ye contrasted "
+        		+ "insensible as Oh up unsatiable advantages decisively as "
+        		+ "at interested Present suppose in esteems in demesne colonel "
+        		+ "it to End horrible she landlord screened stanhill "
+        		+ "Repeated offended you opinions off dissuade ask packages "
+        		+ "screened She alteration everything sympathize impossible his "
+        		+ "get compliment Collected few extremity suffering met had sportsman";
+    	String[] sampleArray = testString.split(" ");
+    	for (int i = 0; i < sampleArray.length; i++) {
+    		dt.addWord(sampleArray[i]);
+    	}
+    	ArrayList<String> solution = new ArrayList<String>(Arrays.asList(
+    			"advantages", "alteration", "as", "ask", "at", "collected",
+    			"colonel", "compliment", "contrasted", "decisively", "dejection", 
+    			"demesne", "discovery", "dissuade", "eagerness", "end", "esteems", 
+    			"estimating", "everything", "excellence", "explained", "extremity",
+    			"few", "get", "had", "his", "horrible", "impossible", "in", "insensible",
+    			"interested", "it", "landlord", "met", "middleton", "my", "off",
+    			"offended", "oh", "opinions", "packages", "present", "repeated", "screened",
+    			"she", "so", "sportsman", "stanhill", "suffering", "suppose", "sympathize",
+    			"to", "unsatiable", "up", "ye", "you"));
+    	ArrayList<String> test = dt.getSortedWords();
+    	assertEquals(solution, dt.getSortedWords());
+    	
+    	assertTrue(dt.hasWord("sportsman"));
+    	assertFalse(dt.hasWord("sports"));
+    }
+    
+    @Test
+    public void sampleMiniTest() {
+    	dt.addWord("as");
+    	dt.addWord("advantages");
+    	
+    	ArrayList<String> solution = new ArrayList<String>(Arrays.asList(
+    			"advantages", "as"));
+        assertEquals(solution, dt.getSortedWords());
+    }
+    
+    @Test
+    public void sampleMiniTest2() {
+    	
+    }
 }
