@@ -18,7 +18,10 @@ public class Sentinal implements SentinalInterface {
     // -----------------------------------------------------------
 
     Sentinal (String posFile, String negFile) throws FileNotFoundException {
-        // TODO: load files into PhraseHash fields appropriately
+    	posHash = new PhraseHash();
+    	negHash = new PhraseHash();
+    	loadSentimentFile(posFile, true);
+        loadSentimentFile(negFile, false);
     }
 
 
@@ -40,19 +43,52 @@ public class Sentinal implements SentinalInterface {
         while (reader.hasNextLine()) {
         	loadSentiment(reader.nextLine(), positive);
         }
-        loadSentiment(reader.nextLine(), positive);
         reader.close();
     }
 
     public String sentinalyze (String filename) throws FileNotFoundException {
-        throw new UnsupportedOperationException();
+        int totalCount = count(filename, true) - count(filename, false);
+        if (totalCount > 0) {
+        	return "positive";
+        }
+        if (totalCount < 0) {
+        	return "negative";
+        }
+        return "neutral";
+        
     }
-
-
-    // -----------------------------------------------------------
-    // Helper Methods
-    // -----------------------------------------------------------
-
-    // TODO: add your helper methods here!
-
+    
+    private int count(String filename, boolean positive) throws FileNotFoundException {
+    	int count = 0;
+    	PhraseHash hash;
+    	if (positive) { 
+    		hash = posHash;
+    	} else {
+    		hash = negHash;
+    	}
+    	Scanner reader = new Scanner(new File(filename));
+    	int index = 0;
+    	while (reader.hasNext()) {
+    		Scanner innerReader = new Scanner(new File(filename));
+    		for (int s = 0; s < index; s++) {
+    			innerReader.next();
+    		}
+    		String test = "";
+    		for (int i = 0; i < hash.longestLength() && innerReader.hasNext(); i++) {
+    			if (test.equals("")) {
+    				test = innerReader.next();
+    			} else {
+    				test = test + " " + innerReader.next();
+    			}
+    			if (hash.get(test) != null) {
+    				count++;
+    			}
+    		}
+    		index++;
+    		reader.next();
+    		innerReader.close();
+    	}
+    	reader.close();
+    	return count;
+    }
 }

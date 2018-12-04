@@ -1,8 +1,5 @@
 package sentinal;
 
-import sentinal.PhraseHash;
-import sentinal.PhraseHashInterface;
-
 public class PhraseHash implements PhraseHashInterface {
 
     // -----------------------------------------------------------
@@ -43,7 +40,6 @@ public class PhraseHash implements PhraseHashInterface {
     		return;
     	}
         int index = hash(s);
-        checkAndGrow();
         if (buckets[index] == null) {
         	String[] wordCount = s.split("\\s+");
             if (wordCount.length > longest) {
@@ -51,7 +47,8 @@ public class PhraseHash implements PhraseHashInterface {
             }
             buckets[index] = s;
             size++;
-        }        
+        } 
+        checkAndGrow();
     }
 
     public String get (String s) {
