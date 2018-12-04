@@ -1,37 +1,45 @@
 package sentinal;
- import sentinal.PhraseHash;
-import sentinal.PhraseHashInterface;
- public class PhraseHash implements PhraseHashInterface {
-     // -----------------------------------------------------------
+
+public class PhraseHash implements PhraseHashInterface {
+
+    // -----------------------------------------------------------
     // Fields
     // -----------------------------------------------------------
-     private final static int BUCKET_START = 1000;
+
+    private final static int BUCKET_START = 1000;
     private final static double LOAD_MAX = 0.7;
     private int size, longest;
     private String[] buckets;
-     // -----------------------------------------------------------
+
+
+    // -----------------------------------------------------------
     // Constructor
     // -----------------------------------------------------------
-     PhraseHash () {
+
+    PhraseHash () {
         size = 0;
         longest = 0;
         buckets = new String[BUCKET_START];
     }
-     // -----------------------------------------------------------
+
+
+    // -----------------------------------------------------------
     // Public Methods
     // -----------------------------------------------------------
-     public int size () {
+
+    public int size () {
         return size;
     }
-     public boolean isEmpty () {
+
+    public boolean isEmpty () {
         return size == 0;
     }
-     public void put (String s) {
+
+    public void put (String s) {
     	if (s == null) {
     		return;
     	}
         int index = hash(s);
-        checkAndGrow();
         if (buckets[index] == null) {
         	String[] wordCount = s.split("\\s+");
             if (wordCount.length > longest) {
@@ -39,9 +47,11 @@ import sentinal.PhraseHashInterface;
             }
             buckets[index] = s;
             size++;
-        }        
+        } 
+        checkAndGrow();
     }
-     public String get (String s) {
+
+    public String get (String s) {
         int index = hash(s);
         if (index >= buckets.length || 
         		buckets[index] == null ||
@@ -50,13 +60,17 @@ import sentinal.PhraseHashInterface;
         }
         return s;
     }
-     public int longestLength () {
+
+    public int longestLength () {
         return longest;
     }
-     // -----------------------------------------------------------
+
+
+    // -----------------------------------------------------------
     // Helper Methods
     // -----------------------------------------------------------
-     private int hash (String s) {
+
+    private int hash (String s) {
     	int hashCode = 0;
     	byte[] strByte = s.getBytes();
         for (int i = 0; i < s.length(); i++) {
@@ -65,7 +79,8 @@ import sentinal.PhraseHashInterface;
         
         return hashCode % buckets.length;
     }
-     private void checkAndGrow () {
+
+    private void checkAndGrow () {
         if (size / buckets.length > LOAD_MAX) {
         	String[] temp = buckets;
         	buckets = new String[temp.length * 2];
