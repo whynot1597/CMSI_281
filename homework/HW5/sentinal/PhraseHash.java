@@ -1,4 +1,4 @@
-package sentinall;
+package sentinal;
 
 public class PhraseHash implements PhraseHashInterface {
 
