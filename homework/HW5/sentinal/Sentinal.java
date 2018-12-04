@@ -67,8 +67,7 @@ public class Sentinal implements SentinalInterface {
     		hash = negHash;
     	}
     	Scanner reader = new Scanner(new File(filename));
-    	int index = 0;
-    	while (reader.hasNext()) {
+    	for (int index = 0; reader.hasNext(); index++, reader.next()) {
     		Scanner innerReader = new Scanner(new File(filename));
     		for (int s = 0; s < index; s++) {
     			innerReader.next();
@@ -84,8 +83,6 @@ public class Sentinal implements SentinalInterface {
     				count++;
     			}
     		}
-    		index++;
-    		reader.next();
     		innerReader.close();
     	}
     	reader.close();
