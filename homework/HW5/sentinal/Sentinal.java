@@ -1,4 +1,4 @@
-package sentinal;
+package sentinall;
 
 import java.io.File;
 import java.io.FileNotFoundException;
