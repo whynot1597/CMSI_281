@@ -34,7 +34,6 @@ public class Sentinal implements SentinalInterface {
         	posHash.put(phrase);
         	return;
         }
-        
         negHash.put(phrase);
     }
 
@@ -47,25 +46,16 @@ public class Sentinal implements SentinalInterface {
     }
 
     public String sentinalyze (String filename) throws FileNotFoundException {
-        int totalCount = count(filename, true) - count(filename, false);
-        if (totalCount > 0) {
-        	return "positive";
-        }
-        if (totalCount < 0) {
-        	return "negative";
+        int count = count(filename, true) - count(filename, false);
+        if ( count != 0 ) {
+        	return count > 0 ? "positive" : "negative"; 
         }
         return "neutral";
-        
     }
     
-    private int count(String filename, boolean positive) throws FileNotFoundException {
+    private int count (String filename, boolean positive) throws FileNotFoundException {
     	int count = 0;
-    	PhraseHash hash;
-    	if (positive) { 
-    		hash = posHash;
-    	} else {
-    		hash = negHash;
-    	}
+    	PhraseHash hash = positive ? posHash : negHash;
     	Scanner reader = new Scanner(new File(filename));
     	for (int index = 0; reader.hasNext(); index++, reader.next()) {
     		Scanner innerReader = new Scanner(new File(filename));
