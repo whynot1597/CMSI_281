@@ -1,3 +1,11 @@
+/** ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ * File name  :  PhraseHash.java
+ * @author    :  Andrew Forney (prototype)
+ * @author    :  Jeremy Goldberg, Matt Stein, Patrick Utz
+ * Date       :  2018-12-14
+ * Description:  @see <a href='http://forns.lmu.build/classes/fall-2018/cmsi-281/homework/hw5/homework-5.html'>Assignment Page</a>
+ *  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 package sentinal;
 
 public class PhraseHash implements PhraseHashInterface {
